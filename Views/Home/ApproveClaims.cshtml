@@ -1,0 +1,61 @@
+﻿@model List<CMCS_Prototype.Models.Claim>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1 class="text-3xl font-bold mb-6 text-center">Claims Awaiting Approval</h1>
+<div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lecturer</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Claim Month</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hours</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@claim.LecturerName</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@claim.ClaimMonth</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@claim.Hours</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if (claim.Status == "Pending")
+                        {
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">@claim.Status</span>
+                        }
+                        else if (claim.Status == "Approved")
+                        {
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">@claim.Status</span>
+                        }
+                        else
+                        {
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">@claim.Status</span>
+                        }
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        @if (claim.Status == "Pending")
+                        {
+                            <form asp-controller="Home" asp-action="Approve" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@claim.Id" />
+                                <button type="submit" class="text-indigo-600 hover:text-indigo-900 mr-2">Approve</button>
+                            </form>
+                            <form asp-controller="Home" asp-action="Reject" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@claim.Id" />
+                                <button type="submit" class="text-red-600 hover:text-red-900">Reject</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-gray-400">No action</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

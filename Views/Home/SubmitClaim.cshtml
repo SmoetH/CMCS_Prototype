@@ -1,0 +1,75 @@
+﻿@model List<CMCS_Prototype.Models.Claim>
+
+@{
+    ViewData["Title"] = "Submit Claim";
+}
+
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">New Claim Submission</h1>
+    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+        <form asp-controller="Home" asp-action="SubmitClaim" method="post" class="space-y-6">
+            <div>
+                <label for="claimantName" class="block text-sm font-medium text-gray-700">Lecturer Name</label>
+                <input type="text" id="claimantName" name="claimantName" value="@ViewBag.Username" readonly class="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 cursor-not-allowed">
+            </div>
+            <div>
+                <label for="month" class="block text-sm font-medium text-gray-700">Claim Month</label>
+                <input type="text" id="month" name="month" placeholder="e.g., October 2025" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div>
+                <label for="hours" class="block text-sm font-medium text-gray-700">Hours Worked</label>
+                <input type="number" id="hours" name="hours" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Submit Claim
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4 text-center">Your Past Claims</h2>
+    @if (Model.Any())
+    {
+        <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Claim Month</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hours</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var claim in Model)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@claim.ClaimMonth</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@claim.Hours</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if (claim.Status == "Pending")
+                                {
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">@claim.Status</span>
+                                }
+                                else if (claim.Status == "Approved")
+                                {
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">@claim.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">@claim.Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-8">
+            <p class="text-gray-500 italic">You have not submitted any claims yet.</p>
+        </div>
+    }
+</div>
